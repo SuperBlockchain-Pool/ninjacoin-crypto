@@ -5,7 +5,7 @@
   },
   "targets": [
     {
-      "target_name": "turtlecoin-crypto",
+      "target_name": "ninjacoin-crypto",
       "defines": [
         "NDEBUG",
         "NO_CRYPTO_EXPORTS",
@@ -108,8 +108,8 @@
         "external/ed25519/sc_sub.c",
         "external/ed25519/signum.c",
         "external/ed25519/slide.c",
-        "src/turtlecoin-crypto.cpp",
-        "src/turtlecoin-crypto-node.cpp"
+        "src/ninjacoin-crypto.cpp",
+        "src/ninjacoin-crypto-node.cpp"
       ],
       "cflags!": [
         "-std=c11",

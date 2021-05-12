@@ -7,10 +7,10 @@ import { keccak256 } from 'js-sha3';
 import { before, describe, it } from 'mocha';
 import { Crypto, IKeyPair } from '../';
 
-const TurtleCoinCrypto = new Crypto();
+const NinjaCoinCrypto = new Crypto();
 
 if (process.env.FORCE_JS) {
-    if (TurtleCoinCrypto.forceJSCrypto()) {
+    if (NinjaCoinCrypto.forceJSCrypto()) {
         console.warn('Performing tests with JS Cryptographic library');
     } else {
         console.warn('Could not activate JS Cryptographic library');
@@ -24,14 +24,14 @@ describe('Cryptography', async function () {
     describe('Core', () => {
         it('Check Key - Public Key', async () => {
             const key = '7849297236cd7c0d6c69a3c8c179c038d3c1c434735741bb3c8995c3c9d6f2ac';
-            const isValid = await TurtleCoinCrypto.checkKey(key);
+            const isValid = await NinjaCoinCrypto.checkKey(key);
 
             assert(isValid === true);
         });
 
         it('Check Key - Private Key', async () => {
             const key = '4a078e76cd41a3d3b534b83dc6f2ea2de500b653ca82273b7bfad8045d85a400';
-            const isValid = await TurtleCoinCrypto.checkKey(key);
+            const isValid = await NinjaCoinCrypto.checkKey(key);
 
             assert(isValid === false);
         });
@@ -39,7 +39,7 @@ describe('Cryptography', async function () {
         it('Secret Key to Public Key', async () => {
             const key = '4a078e76cd41a3d3b534b83dc6f2ea2de500b653ca82273b7bfad8045d85a400';
 
-            const generatedKey = await TurtleCoinCrypto.secretKeyToPublicKey(key);
+            const generatedKey = await NinjaCoinCrypto.secretKeyToPublicKey(key);
 
             assert(generatedKey === '7849297236cd7c0d6c69a3c8c179c038d3c1c434735741bb3c8995c3c9d6f2ac');
         });
@@ -48,26 +48,26 @@ describe('Cryptography', async function () {
             let keys: IKeyPair;
 
             it('Generate Random Keys', async () => {
-                keys = await TurtleCoinCrypto.generateKeys();
+                keys = await NinjaCoinCrypto.generateKeys();
 
                 assert(keys.public_key);
                 assert(keys.private_key);
             });
 
             it('Check Generated Private Key', async () => {
-                const isValid = await TurtleCoinCrypto.checkScalar(keys.private_key);
+                const isValid = await NinjaCoinCrypto.checkScalar(keys.private_key);
 
                 assert(isValid === true);
             });
 
             it('Check Generated Public Key', async () => {
-                const isValid = await TurtleCoinCrypto.checkKey(keys.public_key);
+                const isValid = await NinjaCoinCrypto.checkKey(keys.public_key);
 
                 assert(isValid === true);
             });
 
             it('Check Public Key is for Private Key', async () => {
-                const public_key = await TurtleCoinCrypto.secretKeyToPublicKey(keys.private_key);
+                const public_key = await NinjaCoinCrypto.secretKeyToPublicKey(keys.private_key);
 
                 assert(public_key === keys.public_key);
             });
@@ -75,7 +75,7 @@ describe('Cryptography', async function () {
 
         describe('Traditional Derivation Math', async () => {
             it('Generate Key Derivation', async () => {
-                const derivation = await TurtleCoinCrypto.generateKeyDerivation(
+                const derivation = await NinjaCoinCrypto.generateKeyDerivation(
                     '3b0cc2b066812e6b9fcc42a797dc3c723a7344b604fd4be0b22e06254ff57f94',
                     '6968a0b8f744ec4b8cea5ec124a1b4bd1626a2e6f31e999f8adbab52c4dfa909');
 
@@ -83,7 +83,7 @@ describe('Cryptography', async function () {
             });
 
             it('Derive Public Key', async () => {
-                const publicKey = await TurtleCoinCrypto.derivePublicKey(
+                const publicKey = await NinjaCoinCrypto.derivePublicKey(
                     '4827dbde0c0994c0979e2f9c046825bb4a065b6e35cabc0290ff5216af060c20',
                     2,
                     '854a637b2863af9e8e8216eb2382f3d16616b3ac3e53d0976fbd6f8da6c56418');
@@ -92,7 +92,7 @@ describe('Cryptography', async function () {
             });
 
             it('Underive Public Key: Ours', async () => {
-                const publicKey = await TurtleCoinCrypto.underivePublicKey(
+                const publicKey = await NinjaCoinCrypto.underivePublicKey(
                     '4827dbde0c0994c0979e2f9c046825bb4a065b6e35cabc0290ff5216af060c20',
                     2,
                     'bb55bef919d1c9f74b5b52a8a6995a1dc4af4c0bb8824f5dc889012bc748173d');
@@ -101,7 +101,7 @@ describe('Cryptography', async function () {
             });
 
             it('Underive Public Key: Not Ours', async () => {
-                const publicKey = await TurtleCoinCrypto.underivePublicKey(
+                const publicKey = await NinjaCoinCrypto.underivePublicKey(
                     '4827dbde0c0994c0979e2f9c046825bb4a065b6e35cabc0290ff5216af060c20',
                     0,
                     'bb55bef919d1c9f74b5b52a8a6995a1dc4af4c0bb8824f5dc889012bc748173d');
@@ -110,7 +110,7 @@ describe('Cryptography', async function () {
             });
 
             it('Derive Secret Key', async () => {
-                const secretKey = await TurtleCoinCrypto.deriveSecretKey(
+                const secretKey = await NinjaCoinCrypto.deriveSecretKey(
                     '4827dbde0c0994c0979e2f9c046825bb4a065b6e35cabc0290ff5216af060c20',
                     2,
                     'd9d555a892a85f64916cae1a168bd3f7f400b6471c7b12b438b599601298210b');
@@ -121,7 +121,7 @@ describe('Cryptography', async function () {
 
         describe('New Derivation Math', async () => {
             it('Generate Key Derivation Scalar', async () => {
-                const derivationScalar = await TurtleCoinCrypto.generateKeyDerivationScalar(
+                const derivationScalar = await NinjaCoinCrypto.generateKeyDerivationScalar(
                     '3b0cc2b066812e6b9fcc42a797dc3c723a7344b604fd4be0b22e06254ff57f94',
                     '6968a0b8f744ec4b8cea5ec124a1b4bd1626a2e6f31e999f8adbab52c4dfa909',
                     2);
@@ -130,17 +130,17 @@ describe('Cryptography', async function () {
             });
 
             it('Derivation to Scalar', async () => {
-                const derivation = await TurtleCoinCrypto.generateKeyDerivation(
+                const derivation = await NinjaCoinCrypto.generateKeyDerivation(
                     '3b0cc2b066812e6b9fcc42a797dc3c723a7344b604fd4be0b22e06254ff57f94',
                     '6968a0b8f744ec4b8cea5ec124a1b4bd1626a2e6f31e999f8adbab52c4dfa909');
 
-                const derivationScalar = await TurtleCoinCrypto.derivationToScalar(derivation, 2);
+                const derivationScalar = await NinjaCoinCrypto.derivationToScalar(derivation, 2);
 
                 assert(derivationScalar === '0c5978af8447b9de51401e33e0c60272ee380dd79b8a7e91afcc604e07152903');
             });
 
             it('Derive Public Key', async () => {
-                const publicKey = await TurtleCoinCrypto.scalarDerivePublicKey(
+                const publicKey = await NinjaCoinCrypto.scalarDerivePublicKey(
                     '0c5978af8447b9de51401e33e0c60272ee380dd79b8a7e91afcc604e07152903',
                     '854a637b2863af9e8e8216eb2382f3d16616b3ac3e53d0976fbd6f8da6c56418');
 
@@ -148,7 +148,7 @@ describe('Cryptography', async function () {
             });
 
             it('Derive Secret Key', async () => {
-                const secretKey = await TurtleCoinCrypto.scalarDeriveSecretKey(
+                const secretKey = await NinjaCoinCrypto.scalarDeriveSecretKey(
                     '0c5978af8447b9de51401e33e0c60272ee380dd79b8a7e91afcc604e07152903',
                     'd9d555a892a85f64916cae1a168bd3f7f400b6471c7b12b438b599601298210b');
 
@@ -157,7 +157,7 @@ describe('Cryptography', async function () {
         });
 
         it('Generate Key Image', async () => {
-            const keyImage = await TurtleCoinCrypto.generateKeyImage(
+            const keyImage = await NinjaCoinCrypto.generateKeyImage(
                 'bb55bef919d1c9f74b5b52a8a6995a1dc4af4c0bb8824f5dc889012bc748173d',
                 'e52ece5717f01843e3accc4df651d669e339c31eb8059145e881faae19ad4a0e');
 
@@ -165,21 +165,21 @@ describe('Cryptography', async function () {
         });
 
         it('Generate Deterministic Subwallet #0', async () => {
-            const spendKey = await TurtleCoinCrypto.generateDeterministicSubwalletKeys(
+            const spendKey = await NinjaCoinCrypto.generateDeterministicSubwalletKeys(
                 'dd0c02d3202634821b4d9d91b63d919725f5c3e97e803f3512e52fb0dc2aab0c', 0);
 
             assert(spendKey.private_key === 'dd0c02d3202634821b4d9d91b63d919725f5c3e97e803f3512e52fb0dc2aab0c');
         });
 
         it('Generate Deterministic Subwallet #1', async () => {
-            const spendKey = await TurtleCoinCrypto.generateDeterministicSubwalletKeys(
+            const spendKey = await NinjaCoinCrypto.generateDeterministicSubwalletKeys(
                 'dd0c02d3202634821b4d9d91b63d919725f5c3e97e803f3512e52fb0dc2aab0c', 1);
 
             assert(spendKey.private_key === 'c55cbe4fd1c49dca5958fa1c7b9212c2dbf3fd5bfec84de741d434056e298600');
         });
 
         it('Generate Deterministic Subwallet #64', async () => {
-            const spendKey = await TurtleCoinCrypto.generateDeterministicSubwalletKeys(
+            const spendKey = await NinjaCoinCrypto.generateDeterministicSubwalletKeys(
                 'dd0c02d3202634821b4d9d91b63d919725f5c3e97e803f3512e52fb0dc2aab0c', 64);
 
             assert(spendKey.private_key === '29c2afed13271e2bb3321c2483356fd8798f2709af4de3906b6627ec71727108');
@@ -187,7 +187,7 @@ describe('Cryptography', async function () {
 
         it('Tree Hash', async () => {
             const expectedTreeHash = 'dff9b4e047803822e97fb25bb9acb8320648954e15a6ddf6fa757873793c535e';
-            const treeHash = await TurtleCoinCrypto.tree_hash([
+            const treeHash = await NinjaCoinCrypto.tree_hash([
                 'b542df5b6e7f5f05275c98e7345884e2ac726aeeb07e03e44e0389eb86cd05f0',
                 '1b606a3f4a07d6489a1bcd07697bd16696b61c8ae982f61a90160f4e52828a7f',
                 'c9fae8425d8688dc236bcdbc42fdb42d376c6ec190501aa84b04a4b4cf1ee122',
@@ -203,7 +203,7 @@ describe('Cryptography', async function () {
                 '1b606a3f4a07d6489a1bcd07697bd16696b61c8ae982f61a90160f4e52828a7f'
             ];
 
-            const treeBranch = await TurtleCoinCrypto.tree_branch([
+            const treeBranch = await NinjaCoinCrypto.tree_branch([
                 'b542df5b6e7f5f05275c98e7345884e2ac726aeeb07e03e44e0389eb86cd05f0',
                 '1b606a3f4a07d6489a1bcd07697bd16696b61c8ae982f61a90160f4e52828a7f',
                 'c9fae8425d8688dc236bcdbc42fdb42d376c6ec190501aa84b04a4b4cf1ee122',
@@ -224,10 +224,10 @@ describe('Cryptography', async function () {
             ];
             const privateEphemeral = '73a8e577d58f7c11992201d4014ac7eef39c1e9f6f6d78673103de60a0c3240b';
 
-            const signatures = await TurtleCoinCrypto.generateRingSignatures(
+            const signatures = await NinjaCoinCrypto.generateRingSignatures(
                 prefixHash, keyImage, publicKeys, privateEphemeral, 3);
 
-            const check = await TurtleCoinCrypto.checkRingSignatures(prefixHash, keyImage, publicKeys, signatures);
+            const check = await NinjaCoinCrypto.checkRingSignatures(prefixHash, keyImage, publicKeys, signatures);
 
             assert(check);
         });
@@ -243,12 +243,12 @@ describe('Cryptography', async function () {
             ];
             const privateEphemeral = '73a8e577d58f7c11992201d4014ac7eef39c1e9f6f6d78673103de60a0c3240b';
 
-            const prep = await TurtleCoinCrypto.prepareRingSignatures(prefixHash, keyImage, publicKeys, 3);
+            const prep = await NinjaCoinCrypto.prepareRingSignatures(prefixHash, keyImage, publicKeys, 3);
 
-            const signatures = await TurtleCoinCrypto.completeRingSignatures(
+            const signatures = await NinjaCoinCrypto.completeRingSignatures(
                 privateEphemeral, 3, prep.k, prep.signatures);
 
-            const check = await TurtleCoinCrypto.checkRingSignatures(prefixHash, keyImage, publicKeys, signatures);
+            const check = await NinjaCoinCrypto.checkRingSignatures(prefixHash, keyImage, publicKeys, signatures);
 
             assert(check);
         });
@@ -264,15 +264,15 @@ describe('Cryptography', async function () {
             ];
             const privateEphemeral = '73a8e577d58f7c11992201d4014ac7eef39c1e9f6f6d78673103de60a0c3240b';
 
-            const keys = await TurtleCoinCrypto.generateKeys();
+            const keys = await NinjaCoinCrypto.generateKeys();
 
-            const prep = await TurtleCoinCrypto.prepareRingSignatures(
+            const prep = await NinjaCoinCrypto.prepareRingSignatures(
                 prefixHash, keyImage, publicKeys, 3, keys.private_key);
 
-            const signatures = await TurtleCoinCrypto.completeRingSignatures(
+            const signatures = await NinjaCoinCrypto.completeRingSignatures(
                 privateEphemeral, 3, prep.k, prep.signatures);
 
-            const check = await TurtleCoinCrypto.checkRingSignatures(prefixHash, keyImage, publicKeys, signatures);
+            const check = await NinjaCoinCrypto.checkRingSignatures(prefixHash, keyImage, publicKeys, signatures);
 
             assert(check && prep.k === keys.private_key);
         });
@@ -370,14 +370,14 @@ describe('Cryptography', async function () {
 
             describe('Party 1', async () => {
                 it('Generate Shared Public Spend Key', async () => {
-                    const sharedKey = await TurtleCoinCrypto.calculateSharedPublicKey(
+                    const sharedKey = await NinjaCoinCrypto.calculateSharedPublicKey(
                         [party1.spend.publicKey, party2.spend.publicKey]);
 
                     assert(sharedKey === sharedKeys.spend.publicKey);
                 });
 
                 it('Generate Shared Private View Key', async () => {
-                    const sharedKey = await TurtleCoinCrypto.calculateSharedPrivateKey(
+                    const sharedKey = await NinjaCoinCrypto.calculateSharedPrivateKey(
                         [party1.view.secretKey, party2.view.secretKey]);
 
                     assert(sharedKey === sharedKeys.view.secretKey);
@@ -386,14 +386,14 @@ describe('Cryptography', async function () {
 
             describe('Party 2', async () => {
                 it('Generate Shared Public Spend Key', async () => {
-                    const sharedKey = await TurtleCoinCrypto.calculateSharedPublicKey(
+                    const sharedKey = await NinjaCoinCrypto.calculateSharedPublicKey(
                         [party2.spend.publicKey, party1.spend.publicKey]);
 
                     assert(sharedKey === sharedKeys.spend.publicKey);
                 });
 
                 it('Generate Shared Private View Key', async () => {
-                    const sharedKey = await TurtleCoinCrypto.calculateSharedPrivateKey(
+                    const sharedKey = await NinjaCoinCrypto.calculateSharedPrivateKey(
                         [party2.view.secretKey, party1.view.secretKey]);
 
                     assert(sharedKey === sharedKeys.view.secretKey);
@@ -402,13 +402,13 @@ describe('Cryptography', async function () {
 
             describe('Transactions', async () => {
                 it('Restore KeyImage from Partial KeyImages', async () => {
-                    const keyImage1 = await TurtleCoinCrypto.generateKeyImage(
+                    const keyImage1 = await NinjaCoinCrypto.generateKeyImage(
                         tx.publicEphemeral, party1.spend.secretKey);
 
-                    const keyImage2 = await TurtleCoinCrypto.generateKeyImage(
+                    const keyImage2 = await NinjaCoinCrypto.generateKeyImage(
                         tx.publicEphemeral, party2.spend.secretKey);
 
-                    const keyImage = await TurtleCoinCrypto.restoreKeyImage(
+                    const keyImage = await NinjaCoinCrypto.restoreKeyImage(
                         tx.publicEphemeral, tx.derivation, tx.input.index, [keyImage1, keyImage2]);
 
                     assert(keyImage === tx.keyImage);
@@ -423,19 +423,19 @@ describe('Cryptography', async function () {
                         'e1cd9ccdfdf2b3a45ac2cfd1e29185d22c185742849f52368c3cdd1c0ce499c0'
                     ];
 
-                    const prep = await TurtleCoinCrypto.prepareRingSignatures(
+                    const prep = await NinjaCoinCrypto.prepareRingSignatures(
                         prefixHash, tx.keyImage, publicKeys, 3);
 
-                    const sig1 = await TurtleCoinCrypto.generatePartialSigningKey(
+                    const sig1 = await NinjaCoinCrypto.generatePartialSigningKey(
                         prep.signatures[3], party1.spend.secretKey);
 
-                    const sig2 = await TurtleCoinCrypto.generatePartialSigningKey(
+                    const sig2 = await NinjaCoinCrypto.generatePartialSigningKey(
                         prep.signatures[3], party2.spend.secretKey);
 
-                    const sigs = await TurtleCoinCrypto.restoreRingSignatures(
+                    const sigs = await NinjaCoinCrypto.restoreRingSignatures(
                         tx.derivation, tx.input.index, [sig1, sig2], 3, prep.k, prep.signatures);
 
-                    const success = await TurtleCoinCrypto.checkRingSignatures(
+                    const success = await NinjaCoinCrypto.checkRingSignatures(
                         prefixHash, tx.keyImage, publicKeys, sigs);
 
                     assert(success);
@@ -471,7 +471,7 @@ describe('Cryptography', async function () {
 
             describe('Party 1', async () => {
                 it('Generate Multisig Keys', async () => {
-                    const keys = await TurtleCoinCrypto.calculateMultisigPrivateKeys(
+                    const keys = await NinjaCoinCrypto.calculateMultisigPrivateKeys(
                         party1.spend.secretKey, [party2.spend.publicKey, party3.spend.publicKey]);
 
                     assert.deepStrictEqual(keys, party1.multisig.secretKeys);
@@ -480,13 +480,13 @@ describe('Cryptography', async function () {
                 it('Generate Shared Public Spend Key', async () => {
                     const keys = party1.multisig.publicKeys.concat(
                         party2.multisig.publicKeys, party3.multisig.publicKeys);
-                    const sharedKey = await TurtleCoinCrypto.calculateSharedPublicKey(keys);
+                    const sharedKey = await NinjaCoinCrypto.calculateSharedPublicKey(keys);
 
                     assert(sharedKey === sharedKeys.spend.publicKey);
                 });
 
                 it('Generate Shared Private View Key', async () => {
-                    const sharedKey = await TurtleCoinCrypto.calculateSharedPrivateKey(
+                    const sharedKey = await NinjaCoinCrypto.calculateSharedPrivateKey(
                         [party1.view.secretKey, party2.view.secretKey, party3.view.secretKey]);
 
                     assert(sharedKey === sharedKeys.view.secretKey);
@@ -495,7 +495,7 @@ describe('Cryptography', async function () {
 
             describe('Party 2', async () => {
                 it('Generate Multisig Keys', async () => {
-                    const keys = await TurtleCoinCrypto.calculateMultisigPrivateKeys(
+                    const keys = await NinjaCoinCrypto.calculateMultisigPrivateKeys(
                         party2.spend.secretKey, [party3.spend.publicKey, party1.spend.publicKey]);
 
                     assert.deepStrictEqual(keys, party2.multisig.secretKeys);
@@ -505,13 +505,13 @@ describe('Cryptography', async function () {
                     const keys = party2.multisig.publicKeys.concat(
                         party3.multisig.publicKeys, party1.multisig.publicKeys);
 
-                    const sharedKey = await TurtleCoinCrypto.calculateSharedPublicKey(keys);
+                    const sharedKey = await NinjaCoinCrypto.calculateSharedPublicKey(keys);
 
                     assert(sharedKey === sharedKeys.spend.publicKey);
                 });
 
                 it('Generate Shared Private View Key', async () => {
-                    const sharedKey = await TurtleCoinCrypto.calculateSharedPrivateKey(
+                    const sharedKey = await NinjaCoinCrypto.calculateSharedPrivateKey(
                         [party2.view.secretKey, party3.view.secretKey, party1.view.secretKey]);
 
                     assert(sharedKey === sharedKeys.view.secretKey);
@@ -520,7 +520,7 @@ describe('Cryptography', async function () {
 
             describe('Party 3', async () => {
                 it('Generate Multisig Keys', async () => {
-                    const keys = await TurtleCoinCrypto.calculateMultisigPrivateKeys(
+                    const keys = await NinjaCoinCrypto.calculateMultisigPrivateKeys(
                         party3.spend.secretKey, [party1.spend.publicKey, party2.spend.publicKey]);
 
                     assert.deepStrictEqual(keys, party3.multisig.secretKeys);
@@ -530,13 +530,13 @@ describe('Cryptography', async function () {
                     const keys = party3.multisig.publicKeys.concat(
                         party1.multisig.publicKeys, party2.multisig.publicKeys);
 
-                    const sharedKey = await TurtleCoinCrypto.calculateSharedPublicKey(keys);
+                    const sharedKey = await NinjaCoinCrypto.calculateSharedPublicKey(keys);
 
                     assert(sharedKey === sharedKeys.spend.publicKey);
                 });
 
                 it('Generate Shared Private View Key', async () => {
-                    const sharedKey = await TurtleCoinCrypto.calculateSharedPrivateKey(
+                    const sharedKey = await NinjaCoinCrypto.calculateSharedPrivateKey(
                         [party3.view.secretKey, party2.view.secretKey, party1.view.secretKey]);
 
                     assert(sharedKey === sharedKeys.view.secretKey);
@@ -548,14 +548,14 @@ describe('Cryptography', async function () {
                     const partialKeyImages: string[] = [];
 
                     for (const key of party1.multisig.secretKeys) {
-                        partialKeyImages.push(await TurtleCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
+                        partialKeyImages.push(await NinjaCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
                     }
 
                     for (const key of party2.multisig.secretKeys) {
-                        partialKeyImages.push(await TurtleCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
+                        partialKeyImages.push(await NinjaCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
                     }
 
-                    const keyImage = await TurtleCoinCrypto.restoreKeyImage(
+                    const keyImage = await NinjaCoinCrypto.restoreKeyImage(
                         tx.publicEphemeral, tx.derivation, tx.input.index, partialKeyImages);
 
                     assert(keyImage === tx.keyImage);
@@ -565,14 +565,14 @@ describe('Cryptography', async function () {
                     const partialKeyImages: string[] = [];
 
                     for (const key of party1.multisig.secretKeys) {
-                        partialKeyImages.push(await TurtleCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
+                        partialKeyImages.push(await NinjaCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
                     }
 
                     for (const key of party3.multisig.secretKeys) {
-                        partialKeyImages.push(await TurtleCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
+                        partialKeyImages.push(await NinjaCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
                     }
 
-                    const keyImage = await TurtleCoinCrypto.restoreKeyImage(
+                    const keyImage = await NinjaCoinCrypto.restoreKeyImage(
                         tx.publicEphemeral, tx.derivation, tx.input.index, partialKeyImages);
 
                     assert(keyImage === tx.keyImage);
@@ -582,14 +582,14 @@ describe('Cryptography', async function () {
                     const partialKeyImages: string[] = [];
 
                     for (const key of party2.multisig.secretKeys) {
-                        partialKeyImages.push(await TurtleCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
+                        partialKeyImages.push(await NinjaCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
                     }
 
                     for (const key of party3.multisig.secretKeys) {
-                        partialKeyImages.push(await TurtleCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
+                        partialKeyImages.push(await NinjaCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
                     }
 
-                    const keyImage = await TurtleCoinCrypto.restoreKeyImage(
+                    const keyImage = await NinjaCoinCrypto.restoreKeyImage(
                         tx.publicEphemeral, tx.derivation, tx.input.index, partialKeyImages);
 
                     assert(keyImage === tx.keyImage);
@@ -599,18 +599,18 @@ describe('Cryptography', async function () {
                     const partialKeyImages: string[] = [];
 
                     for (const key of party1.multisig.secretKeys) {
-                        partialKeyImages.push(await TurtleCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
+                        partialKeyImages.push(await NinjaCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
                     }
 
                     for (const key of party2.multisig.secretKeys) {
-                        partialKeyImages.push(await TurtleCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
+                        partialKeyImages.push(await NinjaCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
                     }
 
                     for (const key of party3.multisig.secretKeys) {
-                        partialKeyImages.push(await TurtleCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
+                        partialKeyImages.push(await NinjaCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
                     }
 
-                    const keyImage = await TurtleCoinCrypto.restoreKeyImage(
+                    const keyImage = await NinjaCoinCrypto.restoreKeyImage(
                         tx.publicEphemeral, tx.derivation, tx.input.index, partialKeyImages);
 
                     assert(keyImage === tx.keyImage);
@@ -620,10 +620,10 @@ describe('Cryptography', async function () {
                     const partialKeyImages: string[] = [];
 
                     for (const key of party1.multisig.secretKeys) {
-                        partialKeyImages.push(await TurtleCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
+                        partialKeyImages.push(await NinjaCoinCrypto.generateKeyImage(tx.publicEphemeral, key));
                     }
 
-                    const keyImage = await TurtleCoinCrypto.restoreKeyImage(
+                    const keyImage = await NinjaCoinCrypto.restoreKeyImage(
                         tx.publicEphemeral, tx.derivation, tx.input.index, partialKeyImages);
 
                     assert(keyImage !== tx.keyImage);
@@ -638,24 +638,24 @@ describe('Cryptography', async function () {
                         '71e91d548fc24e21ece8388550c209c0862ffd47320317ddd456aea757f8309b'
                     ];
 
-                    const prep = await TurtleCoinCrypto.prepareRingSignatures(prefixHash, tx.keyImage, publicKeys, 3);
+                    const prep = await NinjaCoinCrypto.prepareRingSignatures(prefixHash, tx.keyImage, publicKeys, 3);
 
                     const partialSignatures: string[] = [];
 
                     for (const key of party1.multisig.secretKeys) {
-                        partialSignatures.push(await TurtleCoinCrypto.generatePartialSigningKey(
+                        partialSignatures.push(await NinjaCoinCrypto.generatePartialSigningKey(
                             prep.signatures[3], key));
                     }
 
                     for (const key of party2.multisig.secretKeys) {
-                        partialSignatures.push(await TurtleCoinCrypto.generatePartialSigningKey(
+                        partialSignatures.push(await NinjaCoinCrypto.generatePartialSigningKey(
                             prep.signatures[3], key));
                     }
 
-                    const sigs = await TurtleCoinCrypto.restoreRingSignatures(
+                    const sigs = await NinjaCoinCrypto.restoreRingSignatures(
                         tx.derivation, tx.input.index, partialSignatures, 3, prep.k, prep.signatures);
 
-                    const success = await TurtleCoinCrypto.checkRingSignatures(
+                    const success = await NinjaCoinCrypto.checkRingSignatures(
                         prefixHash, tx.keyImage, publicKeys, sigs);
 
                     assert(success);
@@ -670,24 +670,24 @@ describe('Cryptography', async function () {
                         '71e91d548fc24e21ece8388550c209c0862ffd47320317ddd456aea757f8309b'
                     ];
 
-                    const prep = await TurtleCoinCrypto.prepareRingSignatures(prefixHash, tx.keyImage, publicKeys, 3);
+                    const prep = await NinjaCoinCrypto.prepareRingSignatures(prefixHash, tx.keyImage, publicKeys, 3);
 
                     const partialSignatures: string[] = [];
 
                     for (const key of party1.multisig.secretKeys) {
-                        partialSignatures.push(await TurtleCoinCrypto.generatePartialSigningKey(
+                        partialSignatures.push(await NinjaCoinCrypto.generatePartialSigningKey(
                             prep.signatures[3], key));
                     }
 
                     for (const key of party3.multisig.secretKeys) {
-                        partialSignatures.push(await TurtleCoinCrypto.generatePartialSigningKey(
+                        partialSignatures.push(await NinjaCoinCrypto.generatePartialSigningKey(
                             prep.signatures[3], key));
                     }
 
-                    const sigs = await TurtleCoinCrypto.restoreRingSignatures(
+                    const sigs = await NinjaCoinCrypto.restoreRingSignatures(
                         tx.derivation, tx.input.index, partialSignatures, 3, prep.k, prep.signatures);
 
-                    const success = await TurtleCoinCrypto.checkRingSignatures(
+                    const success = await NinjaCoinCrypto.checkRingSignatures(
                         prefixHash, tx.keyImage, publicKeys, sigs);
 
                     assert(success);
@@ -702,24 +702,24 @@ describe('Cryptography', async function () {
                         '71e91d548fc24e21ece8388550c209c0862ffd47320317ddd456aea757f8309b'
                     ];
 
-                    const prep = await TurtleCoinCrypto.prepareRingSignatures(prefixHash, tx.keyImage, publicKeys, 3);
+                    const prep = await NinjaCoinCrypto.prepareRingSignatures(prefixHash, tx.keyImage, publicKeys, 3);
 
                     const partialSignatures: string[] = [];
 
                     for (const key of party2.multisig.secretKeys) {
-                        partialSignatures.push(await TurtleCoinCrypto.generatePartialSigningKey(
+                        partialSignatures.push(await NinjaCoinCrypto.generatePartialSigningKey(
                             prep.signatures[3], key));
                     }
 
                     for (const key of party3.multisig.secretKeys) {
-                        partialSignatures.push(await TurtleCoinCrypto.generatePartialSigningKey(
+                        partialSignatures.push(await NinjaCoinCrypto.generatePartialSigningKey(
                             prep.signatures[3], key));
                     }
 
-                    const sigs = await TurtleCoinCrypto.restoreRingSignatures(
+                    const sigs = await NinjaCoinCrypto.restoreRingSignatures(
                         tx.derivation, tx.input.index, partialSignatures, 3, prep.k, prep.signatures);
 
-                    const success = await TurtleCoinCrypto.checkRingSignatures(
+                    const success = await NinjaCoinCrypto.checkRingSignatures(
                         prefixHash, tx.keyImage, publicKeys, sigs);
 
                     assert(success);
@@ -734,29 +734,29 @@ describe('Cryptography', async function () {
                         '71e91d548fc24e21ece8388550c209c0862ffd47320317ddd456aea757f8309b'
                     ];
 
-                    const prep = await TurtleCoinCrypto.prepareRingSignatures(prefixHash, tx.keyImage, publicKeys, 3);
+                    const prep = await NinjaCoinCrypto.prepareRingSignatures(prefixHash, tx.keyImage, publicKeys, 3);
 
                     const partialSignatures: string[] = [];
 
                     for (const key of party1.multisig.secretKeys) {
-                        partialSignatures.push(await TurtleCoinCrypto.generatePartialSigningKey(
+                        partialSignatures.push(await NinjaCoinCrypto.generatePartialSigningKey(
                             prep.signatures[3], key));
                     }
 
                     for (const key of party2.multisig.secretKeys) {
-                        partialSignatures.push(await TurtleCoinCrypto.generatePartialSigningKey(
+                        partialSignatures.push(await NinjaCoinCrypto.generatePartialSigningKey(
                             prep.signatures[3], key));
                     }
 
                     for (const key of party3.multisig.secretKeys) {
-                        partialSignatures.push(await TurtleCoinCrypto.generatePartialSigningKey(
+                        partialSignatures.push(await NinjaCoinCrypto.generatePartialSigningKey(
                             prep.signatures[3], key));
                     }
 
-                    const sigs = await TurtleCoinCrypto.restoreRingSignatures(
+                    const sigs = await NinjaCoinCrypto.restoreRingSignatures(
                         tx.derivation, tx.input.index, partialSignatures, 3, prep.k, prep.signatures);
 
-                    const success = await TurtleCoinCrypto.checkRingSignatures(
+                    const success = await NinjaCoinCrypto.checkRingSignatures(
                         prefixHash, tx.keyImage, publicKeys, sigs);
 
                     assert(success);
@@ -771,19 +771,19 @@ describe('Cryptography', async function () {
                         '71e91d548fc24e21ece8388550c209c0862ffd47320317ddd456aea757f8309b'
                     ];
 
-                    const prep = await TurtleCoinCrypto.prepareRingSignatures(prefixHash, tx.keyImage, publicKeys, 3);
+                    const prep = await NinjaCoinCrypto.prepareRingSignatures(prefixHash, tx.keyImage, publicKeys, 3);
 
                     const partialSignatures: string[] = [];
 
                     for (const key of party1.multisig.secretKeys) {
-                        partialSignatures.push(await TurtleCoinCrypto.generatePartialSigningKey(
+                        partialSignatures.push(await NinjaCoinCrypto.generatePartialSigningKey(
                             prep.signatures[3], key));
                     }
 
-                    const sigs = await TurtleCoinCrypto.restoreRingSignatures(
+                    const sigs = await NinjaCoinCrypto.restoreRingSignatures(
                         tx.derivation, tx.input.index, partialSignatures, 3, prep.k, prep.signatures);
 
-                    const success = await TurtleCoinCrypto.checkRingSignatures(
+                    const success = await NinjaCoinCrypto.checkRingSignatures(
                         prefixHash, tx.keyImage, publicKeys, sigs);
 
                     assert(!success);
@@ -911,34 +911,34 @@ describe('Hash Generation Methods', async function () {
         it(algo.name, async function () {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            const hash = await TurtleCoinCrypto[algo.func](testdata);
+            const hash = await NinjaCoinCrypto[algo.func](testdata);
 
             assert(algo.hash === hash);
         });
     });
 
     it('chukwa_slow_hash', async function () {
-        const hash = await TurtleCoinCrypto.chukwa_slow_hash(testdata);
+        const hash = await NinjaCoinCrypto.chukwa_slow_hash(testdata);
         assert(hash === 'c0dad0eeb9c52e92a1c3aa5b76a3cb90bd7376c28dce191ceeb1096e3a390d2e');
     });
 
     it('chukwa_slow_hash [1]', async function () {
-        const hash = await TurtleCoinCrypto.chukwa_slow_hash(testdata, 1);
+        const hash = await NinjaCoinCrypto.chukwa_slow_hash(testdata, 1);
         assert(hash === 'c0dad0eeb9c52e92a1c3aa5b76a3cb90bd7376c28dce191ceeb1096e3a390d2e');
     });
 
     it('chukwa_slow_hash [2]', async function () {
-        const hash = await TurtleCoinCrypto.chukwa_slow_hash(testdata, 2);
+        const hash = await NinjaCoinCrypto.chukwa_slow_hash(testdata, 2);
         assert(hash === '3578c135261366a7bac407b8c0ff50f3ad96f096ec2813e9644e6e77a43f803d');
     });
 
     it('chukwa_slow_hash_base [3 iterations, 512KB, 1 thread]', async function () {
-        const hash = await TurtleCoinCrypto.chukwa_slow_hash_base(testdata, 3, 512, 1);
+        const hash = await NinjaCoinCrypto.chukwa_slow_hash_base(testdata, 3, 512, 1);
         assert(hash === 'c0dad0eeb9c52e92a1c3aa5b76a3cb90bd7376c28dce191ceeb1096e3a390d2e');
     });
 
     it('chukwa_slow_hash_base [4 iterations, 1024KB, 1 thread]', async function () {
-        const hash = await TurtleCoinCrypto.chukwa_slow_hash_base(testdata, 4, 1024, 1);
+        const hash = await NinjaCoinCrypto.chukwa_slow_hash_base(testdata, 4, 1024, 1);
         assert(hash === '3578c135261366a7bac407b8c0ff50f3ad96f096ec2813e9644e6e77a43f803d');
     });
 });
@@ -964,11 +964,11 @@ describe('Test use of user crypto', async () => {
     const expected_hash = 'b542df5b6e7f5f05275c98e7345884e2ac726aeeb07e03e44e0389eb86cd05f0';
 
     before(() => {
-        TurtleCoinCrypto.userCryptoFunctions = { cn_fast_hash };
+        NinjaCoinCrypto.userCryptoFunctions = { cn_fast_hash };
     });
 
     it('Test cn_fast_hash', async () => {
-        const hash = await TurtleCoinCrypto.cn_fast_hash(testdata);
+        const hash = await NinjaCoinCrypto.cn_fast_hash(testdata);
 
         assert(hash === expected_hash);
     });

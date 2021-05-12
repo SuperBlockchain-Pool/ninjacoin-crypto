@@ -1374,7 +1374,7 @@ function loadBrowserWASM() {
     try {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        const Self = window.TurtleCoinCrypto();
+        const Self = window.NinjaCoinCrypto();
         if (Object.getOwnPropertyNames(Self).length === 0 ||
             typeof Self.cn_fast_hash === 'undefined') {
             return false;
@@ -1392,7 +1392,7 @@ function loadBrowserWASM() {
  */
 function loadNativeAddon() {
     try {
-        const Self = require('bindings')('turtlecoin-crypto.node');
+        const Self = require('bindings')('ninjacoin-crypto.node');
         if (Object.getOwnPropertyNames(Self).length === 0 ||
             typeof Self.cn_fast_hash === 'undefined') {
             return false;
@@ -1410,7 +1410,7 @@ function loadNativeAddon() {
  */
 function loadNativeJS() {
     try {
-        const Self = require('./turtlecoin-crypto.js')();
+        const Self = require('./ninjacoin-crypto.js')();
         if (Object.getOwnPropertyNames(Self).length === 0 ||
             typeof Self.cn_fast_hash === 'undefined') {
             return false;
@@ -1431,7 +1431,7 @@ function loadWASMJS() {
         return false;
     }
     try {
-        const Self = require('./turtlecoin-crypto-wasm.js')();
+        const Self = require('./ninjacoin-crypto-wasm.js')();
         if (Object.getOwnPropertyNames(Self).length === 0) {
             return false;
         }
